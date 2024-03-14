@@ -10,6 +10,7 @@ import { environment } from '../environments/environment';
 export class AppService {
 
   db: Firestore;
+  dbName: any = 'user';
   studentCol: CollectionReference<DocumentData>;
   private updatedSnapshot = new Subject<QuerySnapshot<DocumentData>>();
   obsr_UpdatedSnapshot = this.updatedSnapshot.asObservable();
@@ -17,7 +18,7 @@ export class AppService {
   constructor() {
     initializeApp(environment.firebaseConfig);
     this.db = getFirestore();
-    this.studentCol = collection(this.db, 'user');
+    this.studentCol = collection(this.db, this.dbName);
 
     // Get Realtime Data
     onSnapshot(this.studentCol, (snapshot) => {
@@ -42,13 +43,13 @@ export class AppService {
   }
 
   async deleteStudent(docId: string) {
-    const docRef = doc(this.db, 'user', docId)
+    const docRef = doc(this.db, this.dbName, docId)
     await deleteDoc(docRef);
     return;
   }
 
   async updateStudent(docId: string, name: string, age: string) {
-    const docRef = doc(this.db, 'user', docId);
+    const docRef = doc(this.db, this.dbName, docId);
     await updateDoc(docRef, { name, age })
     return;
   }
